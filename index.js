@@ -33,6 +33,6 @@ app.listen(PORT , ()=>{
 });
 
 app.use('/',(req,res)=>{
-    res.send("welcome to RainBow")
+    res.send("welcome to RainBow world")
 })
 //mongodb+srv://pakadharani:dharani@cluster0.kbg9sao.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
