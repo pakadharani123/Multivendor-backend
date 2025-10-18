@@ -1,22 +1,20 @@
 const Firm = require('../models/Firm');
 const Vendor = require('../models/Vendor');
 
-const  multer = require('multer');
+const  multer = require('multer')
 
-const path = require('path');
-
-
+const path = require('path')
          const storage = multer.diskStorage({
                     destination: function (req, file, cb) {
                     cb(null, "uploads/"); // save in "uploads" folder
                     },
                 filename: function (req, file, cb) {
                 cb(  null,    Date.now() + path.extname(file.originalname) // unique file name
-                                );
+                );
                     },
             });
 
-   const upload = multer({storage:storage});
+ const upload = multer({storage:storage});
 
 
 const addFirm = async(req,res)=>{
@@ -30,18 +28,33 @@ const addFirm = async(req,res)=>{
         res.status(404).json({message:"Vendor not found"})
     }
 
+
+    if(vendor.firm.length>0){
+    return res.status(400).json({message:"vendor can have only  one firm"})
+}
+
+
     const firm = new Firm({
-        firmName,area,category,region,offer,image,vendor:vendor._id
+        firmName,
+        area,
+        category,
+        region,
+        offer,
+        image,
+        vendor:vendor._id
     })
 
    const savedFirm =  await firm.save();
 
    vendor.firm.push(savedFirm)
+   const firmId = savedFirm._id
 
    await vendor.save();
-    return res.status(200).json({message:'Firm Added successfully'})
+
+
+    return res.status(200).json({message:'Firm Added successfully',firmId})
     }catch(error){
-        console.error.apply(error)
+        console.error(error)
         res.status(500).json("internal server error")
 
     }
